@@ -39,11 +39,11 @@ jobs:
         run: echo "release_suffix=_${{ env.current_date }}" >> $GITHUB_ENV
 
       - name: Set nightly version
-        if: startsWith(github.ref, 'refs/tags/latest-release') != true
+        if: startsWith(github.ref, 'refs/tags/test') != true
         run: echo "DROIDIAN_VERSION=nightly" >> $GITHUB_ENV
 
       - name: Set version
-        if: startsWith(github.ref, 'refs/tags/latest-release') == true
+        if: startsWith(github.ref, 'refs/tags/test') == true
         run: echo "DROIDIAN_VERSION=$(echo ${{ github.ref }} | rev | cut -d'/' -f1 | rev)" >> $GITHUB_ENV
 
       - name: Set identifier
@@ -102,7 +102,7 @@ jobs:
 
       - name: Delete old nightly release
         uses: dev-drprasad/delete-tag-and-release@v0.2.1
-        if: startsWith(github.ref, 'refs/tags/latest-release') != true
+        if: startsWith(github.ref, 'refs/tags/test') != true
         with:
           delete_release: true # default: false
           tag_name: nightly # tag name to delete
@@ -110,7 +110,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tag snapshot
-        if: startsWith(github.ref, 'refs/tags/latest-release') != true
+        if: startsWith(github.ref, 'refs/tags/test') != true
         uses: tvdias/github-tagger@v0.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -132,7 +132,7 @@ jobs:
 
       - name: Create stable release (drafted)
         id: create_release
-        if: startsWith(github.ref, 'refs/tags/latest-release')
+        if: startsWith(github.ref, 'refs/tags/test')
         uses: softprops/action-gh-release@v1
         with:
           files: droidian-out/SHA256SUMS
@@ -142,7 +142,7 @@ jobs:
 
       - name: Create nightly release
         id: create_nightly
-        if: startsWith(github.ref, 'refs/tags/latest-release') != true
+        if: startsWith(github.ref, 'refs/tags/test') != true
         uses: softprops/action-gh-release@v1
         with:
           files: droidian-out/SHA256SUMS
@@ -172,7 +172,7 @@ jobs:
 
       - name: Create stable release (drafted)
         id: create_release
-        if: startsWith(github.ref, 'refs/tags/latest-release')
+        if: startsWith(github.ref, 'refs/tags/test')
         uses: softprops/action-gh-release@v1
         with:
           files: droidian-out/*
@@ -182,7 +182,7 @@ jobs:
 
       - name: Create nightly release
         id: create_nightly
-        if: startsWith(github.ref, 'refs/tags/latest-release') != true
+        if: startsWith(github.ref, 'refs/tags/test') != true
         uses: softprops/action-gh-release@v1
         with:
           files: droidian-out/*
